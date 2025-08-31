@@ -1,0 +1,81 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+:root {
+  --font-title-section: 24px;
+  --gray-color-text: #5f5f61;
+  --gray-color-surface: #f3f4f6;
+  --gray-color-focus: #cdcccc;
+  --gray-color-alternative: #e5e7eb;
+
+  --green-color-surface: #dbfce7;
+  --green-color-text: #00a63e;
+}
+
+
+form {
+  .form-item {
+    margin-block: 18px;
+  }
+
+  .form-item-input {
+    background-color: var(--gray-color-surface);
+    padding: 8px;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .form-item-input::placeholder {
+    color: var(--gray-color-text);
+  }
+
+  .form-item-input:focus {
+    /*border: 1px solid var(--gray-color-focus);*/
+    outline: none;
+  }
+
+}
+
+.button {
+  background-color: var(--gray-color-surface);
+  padding: 5px;
+  border-radius: 5px;
+  min-width: 4rem;
+
+  &.primary {
+    background-color: var(--green-color-surface);
+    color: var(--green-color-text);
+    width: 6rem;
+  }
+
+  &.full-width {
+    width: 100%;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 18px;
+  }
+}
+
+.card {
+  @apply shadow-md rounded-md p-4 mb-10;
+
+  header.title {
+    font-weight: 600;
+    box-shadow: none;
+    font-size: 18px;
+  }
+
+  main.content {
+    padding-block: 10px;
+    padding-inline: 0;
+  }
+
+  footer.bottom {
+    font-size: 14px;
+    margin-top: 12px;
+  }
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
