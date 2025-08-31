@@ -12,6 +12,10 @@
   --green-color-text: #00a63e;
 }
 
+html, body {
+  overscroll-behavior: none !important;
+}
+
 
 form {
   .form-item {

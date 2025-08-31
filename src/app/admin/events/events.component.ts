@@ -81,6 +81,7 @@ export default class EventsComponent implements OnInit {
     private routeService: RoutesService = inject(RoutesService);
 
     ngOnInit(): void {
+      console.log('aaa');
       this.routeService.setTitle('Eventos')
     }
 }
