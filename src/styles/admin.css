@@ -40,3 +40,37 @@
     color: black;
   }
 }
+
+@media screen and (min-width: 600px){
+  .admin-container {
+    display: block;
+
+    header {
+      width: 100%;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+
+  .eventHeader {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 15px;
+    justify-content: start;
+  }
+
+  .eventHeader > div.card {
+    /*width: 120%;*/
+    margin: 0;
+  }
+
+  .eventHeader > button {
+    height: 80%;
+    flex-grow: 1;
+  }
+
+}

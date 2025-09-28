@@ -11,27 +11,29 @@ import { RouterLink } from '@angular/router';
   ],
   template: `
     <section class="admin-section mt-4">
-      <button class="button primary full-width flex items-center justify-center" mat-ripple routerLink="create">
-        <span class="material-symbols-outlined">calendar_add_on</span>
-        Crear Evento
-      </button>
+      <div class="eventHeader">
+        <button class="button primary full-width flex items-center justify-center" mat-ripple routerLink="create">
+          <span class="material-symbols-outlined">calendar_add_on</span>
+          Crear Evento
+        </button>
 
-      <div class="card mt-5">
-        <header class="title">Proxima Reunion</header>
-        <main class="content">
-          <div class="w-full h-40 rounded-lg bg-cover bg-center mb-4" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA2P14kmuYef2GKs_p708qisiU6J-ZolrgjGVF_qJftHbBSV5iJtQRB9IElO8TZUqZO2bvPe9Vda6FNMlwwPaEdleG-0ywmIXXvrDH05EQeokcugtzxxvRyxcuuKUroeDstSBE1rEIf-Zv-85cf2SJrv5u9Y5ov5dKydaTFFImyiZBb4fNcbYt99ICz7gvBenMkSIND1CWD4QM2P_x9nTjEgt_K32LwDnsJM6MiqJDYCsRRDdS34SnHohLsQw1eYhRsdfRyogDlbxY");'></div>
-          <p class="font-medium">Libro: El jardin Secreto</p>
-          <p class="text-[var(--gray-color-text)] text-sm">Agosto 20, 2025. 7:00 pm</p>
-          <p class="text-[var(--gray-color-text)] text-sm">Cafe Iguanas</p>
-        </main>
-        <footer class="bottom text-[var(--gray-color-text)] space-x-5 flex flex-row justify-end">
-          <button routerLink="edit/1">
-            <span class="material-symbols-outlined">edit</span>
-          </button>
-          <button>
-            <span class="material-symbols-outlined">delete</span>
-          </button>
-        </footer>
+        <div class="card mt-5 ">
+          <header class="title">Proxima Reunion</header>
+          <main class="content">
+            <div class="w-full h-40 rounded-lg bg-cover bg-center mb-4" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA2P14kmuYef2GKs_p708qisiU6J-ZolrgjGVF_qJftHbBSV5iJtQRB9IElO8TZUqZO2bvPe9Vda6FNMlwwPaEdleG-0ywmIXXvrDH05EQeokcugtzxxvRyxcuuKUroeDstSBE1rEIf-Zv-85cf2SJrv5u9Y5ov5dKydaTFFImyiZBb4fNcbYt99ICz7gvBenMkSIND1CWD4QM2P_x9nTjEgt_K32LwDnsJM6MiqJDYCsRRDdS34SnHohLsQw1eYhRsdfRyogDlbxY");'></div>
+            <p class="font-medium">Libro: El jardin Secreto</p>
+            <p class="text-[var(--gray-color-text)] text-sm">Agosto 20, 2025. 7:00 pm</p>
+            <p class="text-[var(--gray-color-text)] text-sm">Cafe Iguanas</p>
+          </main>
+          <footer class="bottom text-[var(--gray-color-text)] space-x-5 flex flex-row justify-end">
+            <button routerLink="edit/1">
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+            <button>
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </footer>
+        </div>
       </div>
 
       <div class="card">
@@ -81,7 +83,6 @@ export default class EventsComponent implements OnInit {
     private routeService: RoutesService = inject(RoutesService);
 
     ngOnInit(): void {
-      console.log('aaa');
       this.routeService.setTitle('Eventos')
     }
 }

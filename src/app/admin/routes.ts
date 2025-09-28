@@ -13,6 +13,10 @@ const routes: Routes = [
       {
         path: 'notifications',
         loadComponent: () => import('./notifications/notifications.component')
+      },
+      {
+        path: 'reviews',
+        loadComponent: () => import('./reviews/reviews.component')
       }
     ]
   }

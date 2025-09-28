@@ -10,6 +10,8 @@
 
   --green-color-surface: #dbfce7;
   --green-color-text: #00a63e;
+
+  --olive-color: #9caf88;
 }
 
 html, body {
@@ -51,6 +53,18 @@ form {
     background-color: var(--green-color-surface);
     color: var(--green-color-text);
     width: 6rem;
+  }
+
+  &.primary-alternative {
+    background-color: white;
+    color: var(--olive-color);
+    border: solid 1px var(--olive-color);
+  }
+
+  &.danger-alternative {
+    background-color: white;
+    color: darkred;
+    border: solid 1px darkred;
   }
 
   &.full-width {
