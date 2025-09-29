@@ -41,6 +41,11 @@ form {
     outline: none;
   }
 
+  span.error {
+    font-size: 12px;
+    color: red;
+  }
+
 }
 
 .button {
@@ -72,6 +77,11 @@ form {
     padding: 12px;
     font-weight: 600;
     font-size: 18px;
+  }
+
+  &.disabled {
+    background-color: var(--gray-color-surface);
+    color: white;
   }
 }
 

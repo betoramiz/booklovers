@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '../shared/guards/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'events', pathMatch: 'full' },
@@ -8,7 +9,8 @@ const routes: Routes = [
     children: [
       {
         path: 'events',
-        loadChildren: () => import('./events/routes')
+        loadChildren: () => import('./events/routes'),
+        canActivate: [authGuard],
       },
       {
         path: 'notifications',

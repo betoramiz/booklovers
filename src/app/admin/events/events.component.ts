@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { RoutesService } from '../routes.service';
 import { RouterLink } from '@angular/router';
+import { EventService } from './event.service';
 
 @Component({
   selector: 'app-events',
@@ -81,8 +82,18 @@ import { RouterLink } from '@angular/router';
 export default class EventsComponent implements OnInit {
 
     private routeService: RoutesService = inject(RoutesService);
+    private eventService: EventService = inject(EventService);
 
-    ngOnInit(): void {
-      this.routeService.setTitle('Eventos')
+    async ngOnInit(): Promise<void> {
+      this.routeService.setTitle('Eventos');
+
+      const events = await this.eventService.getEvents();
+
+      if(events.isError()) {
+        console.error('error', events.error);
+      }
+      else {
+        console.log('events', events.value);
+      }
     }
 }
