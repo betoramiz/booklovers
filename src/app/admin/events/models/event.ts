@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { eventInsertPartial, eventsInsert } from '../types/events';
 
 export interface IEvent {
   name: string;
@@ -25,14 +26,14 @@ export class EventModel {
     };
   }
 
-  static toDBModel(event: IEvent) {
+  static toDBModel(event: IEvent): eventInsertPartial {
     return {
       name: event.name,
-      when: event.when,
+      when: format(event.when, 'yyyy-MM-dd'),
       at_time: event.time,
       where: event.where,
       description: event.description,
-      map_url: event.mapUrl
+      map_url: event.mapUrl,
     }
   }
 }

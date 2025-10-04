@@ -5,6 +5,8 @@ import { Result } from 'typescript-result';
 import { EventItemList } from './models/event-item-list';
 import { IEvent } from './models/event';
 import { createEventResponse } from './models/createEventResponse';
+import { Database } from '../../../database.types';
+import { eventInsertPartial, eventsInsert } from './types/events';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,6 @@ export class EventService extends BaseService{
     const { data, error } = await this.supabaseClient
       .from('events')
       .select('id, name, when, where')
-      // .lt('when', new Date());
 
     if(error) {
       return Result.error(error.message);
@@ -30,14 +31,13 @@ export class EventService extends BaseService{
     return Result.ok(data);
   }
 
-  async createEvent(eventShema: any): Promise<Result<createEventResponse, string>> {
-    const { data, error } = await this.supabaseClient.from('events').insert([eventShema]).select();
+  async createEvent(event: eventInsertPartial): Promise<Result<createEventResponse, string>> {
+    const { data, error } = await this.supabaseClient.from('events').insert([event]).select();
 
     if(error) {
       return Result.error(error.message)
     }
 
-    console.log('data', data);
-    return Result.ok({ id:  1});
+    return Result.ok({ id:  data[0].id});
   }
 }

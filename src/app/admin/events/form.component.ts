@@ -1,19 +1,27 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateEventForm } from './models/create-event-form';
 import { NgClass } from '@angular/common';
-import { EventModel, IEvent } from './models/event';
+import { EventModel } from './models/event';
 import { EventService } from './event.service';
+import { SpinnerComponent } from '../../shared/components/spinner.component';
+import { Router } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'event-form',
   imports: [
     MatRipple,
     ReactiveFormsModule,
-    NgClass
+    NgClass,
+    SpinnerComponent,
+    MatSnackBarModule
   ],
   template: `
+    @if (isLoading()) {
+      <club-spinner></club-spinner>
+    }
     <form [formGroup]="eventFormGroup" (ngSubmit)="onSubmit()">
       <div class="form-item">
         <label for="eventName">Nombre del Evento</label>
@@ -78,20 +86,33 @@ import { EventService } from './event.service';
 export class FormComponent {
 
   private eventService: EventService = inject(EventService);
+  private router: Router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
   formBuilder: FormBuilder = inject(FormBuilder);
   eventFormGroup: FormGroup<CreateEventForm> = this.createFormGroup();
+  isLoading = signal(false);
 
   public async onSubmit(): Promise<void> {
     if(this.eventFormGroup.invalid) {
       return;
     }
+    this.isLoading.set(true);
 
     const { name, when, time, where, description, mapUrl } = this.eventFormGroup.value;
     const event = EventModel.create(name!, where!, when!, time!, description!, mapUrl);
-    console.log(event);
     const dbSchema = EventModel.toDBModel(event);
     const result = await this.eventService.createEvent(dbSchema);
+
+    if(result.isError()) {
+      this.isLoading.set(false);
+      console.error('Error al crear el evento', result.error);
+      this.snackBar.open('Error al crear el evento', 'Cerrar', { duration: 5000 });
+    } else {
+      this.isLoading.set(false);
+      this.snackBar.open('Evento creado exitosamente', 'Cerrar', { duration: 3000 })
+      this.router.navigate(['/admin/events']);
+    }
   }
 
   private createFormGroup(): FormGroup<CreateEventForm> {
