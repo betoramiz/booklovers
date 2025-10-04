@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { loadEventResolver } from './resolvers/load-event.resolver';
 
 const routes: Route[] = [
   {
@@ -14,7 +15,9 @@ const routes: Route[] = [
   },
   {
     path: 'edit/:id',
-    loadComponent: () => import('./create-edit.component')
+    loadComponent: () => import('./create-edit.component'),
+    data: { editMode: true },
+    resolve: { loadedEvents: loadEventResolver }
   }
 ];
 

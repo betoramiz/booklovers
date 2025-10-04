@@ -3,4 +3,5 @@ export interface EventItemList {
   name: string,
   when: Date,
   where: string;
+  at_time: string;
 }

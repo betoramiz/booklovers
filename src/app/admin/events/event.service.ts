@@ -3,10 +3,9 @@ import BaseService from '../../shared/services/base.service';
 import { environment } from '../../../environments/environment';
 import { Result } from 'typescript-result';
 import { EventItemList } from './models/event-item-list';
-import { IEvent } from './models/event';
 import { createEventResponse } from './models/createEventResponse';
-import { Database } from '../../../database.types';
-import { eventInsertPartial, eventsInsert } from './types/events';
+import { eventEntity, eventInsert } from './types/events';
+import { getEventByIdResult } from './models/getById';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +20,7 @@ export class EventService extends BaseService{
   async getEvents(): Promise<Result<EventItemList[], string>> {
     const { data, error } = await this.supabaseClient
       .from('events')
-      .select('id, name, when, where')
+      .select('id, name, when, where, at_time')
 
     if(error) {
       return Result.error(error.message);
@@ -31,7 +30,25 @@ export class EventService extends BaseService{
     return Result.ok(data);
   }
 
-  async createEvent(event: eventInsertPartial): Promise<Result<createEventResponse, string>> {
+  async getEventById(eventId: number): Promise<Result<getEventByIdResult, Error>> {
+    const { data, error } = await this.supabaseClient
+      .from('events')
+      .select('id, name, when, where, at_time, description, map_url')
+      .eq('id', eventId)
+      .single();
+
+    if(error) {
+      return Result.error(error);
+    }
+    if(!data) {
+      return Result.error(new Error('Evento no encontrado'));
+    }
+
+    const event: getEventByIdResult = {...data};
+    return Result.ok(event)
+  }
+
+  async createEvent(event: eventInsert): Promise<Result<createEventResponse, string>> {
     const { data, error } = await this.supabaseClient.from('events').insert([event]).select();
 
     if(error) {
@@ -39,5 +56,19 @@ export class EventService extends BaseService{
     }
 
     return Result.ok({ id:  data[0].id});
+  }
+
+  async editEvent(event: eventEntity): Promise<Result<boolean, Error>> {
+    const { data, error } = await this.supabaseClient
+      .from('events')
+      .update(event)
+      .eq('id', event.id)
+      .select();
+
+    if (error) {
+      return Result.error(error);
+    }
+
+    return Result.ok(true);
   }
 }

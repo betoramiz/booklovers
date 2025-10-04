@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 
 export interface CreateEventForm {
   name: FormControl<string>;
-  when: FormControl<Date>;
+  when: FormControl<string>;
   time: FormControl<string>;
   where: FormControl<string>;
   description: FormControl<string>;

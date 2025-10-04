@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { EventService } from './event.service';
 import { EventItemList } from './models/event-item-list';
 import { DatePipe, NgStyle } from '@angular/common';
+import { StringToTimePipe } from '../../shared/pipes/string-to-time.pipe';
 
 @Component({
   selector: 'app-events',
@@ -12,7 +13,8 @@ import { DatePipe, NgStyle } from '@angular/common';
     MatRipple,
     RouterLink,
     DatePipe,
-    NgStyle
+    NgStyle,
+    StringToTimePipe
   ],
   template: `
     <section class="admin-section mt-4">
@@ -27,12 +29,12 @@ import { DatePipe, NgStyle } from '@angular/common';
             <header class="title">Proxima Reunion</header>
             <main class="content">
               <div class="w-full h-40 rounded-lg bg-cover bg-center mb-4" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA2P14kmuYef2GKs_p708qisiU6J-ZolrgjGVF_qJftHbBSV5iJtQRB9IElO8TZUqZO2bvPe9Vda6FNMlwwPaEdleG-0ywmIXXvrDH05EQeokcugtzxxvRyxcuuKUroeDstSBE1rEIf-Zv-85cf2SJrv5u9Y5ov5dKydaTFFImyiZBb4fNcbYt99ICz7gvBenMkSIND1CWD4QM2P_x9nTjEgt_K32LwDnsJM6MiqJDYCsRRDdS34SnHohLsQw1eYhRsdfRyogDlbxY");'></div>
-              <p class="font-medium">Libro: El jardin Secreto</p>
-              <p class="text-[var(--gray-color-text)] text-sm">Agosto 20, 2025. 7:00 pm</p>
-              <p class="text-[var(--gray-color-text)] text-sm">Cafe Iguanas</p>
+              <p class="font-medium">{{ event.name }}</p>
+              <p class="text-[var(--gray-color-text)] text-sm">{{ event.when | date }}, , {{ event.at_time | stringToTime }}</p>
+              <p class="text-[var(--gray-color-text)] text-sm">{{ event.where }}</p>
             </main>
             <footer class="bottom text-[var(--gray-color-text)] space-x-5 flex flex-row justify-end">
-              <button routerLink="edit/1">
+              <button [routerLink]="['edit', event.id]">
                 <span class="material-symbols-outlined">edit</span>
               </button>
               <button>
@@ -57,7 +59,7 @@ import { DatePipe, NgStyle } from '@angular/common';
               </div>
               <div class="flex-col">
                 <p class="font-medium">{{ event.name }}</p>
-                <p class="text-[var(--gray-color-text)] text-sm">{{ event.where }}</p>
+                <p class="text-[var(--gray-color-text)] text-sm">{{ event.where }} </p>
                 <p class="text-[var(--gray-color-text)] text-sm">{{ event.when | date }}</p>
               </div>
             </div>
