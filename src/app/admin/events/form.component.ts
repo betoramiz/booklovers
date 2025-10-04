@@ -1,47 +1,73 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CreateEventForm } from './models/create-event-form';
+import { NgClass } from '@angular/common';
+import { EventModel, IEvent } from './models/event';
+import { EventService } from './event.service';
 
 @Component({
   selector: 'event-form',
   imports: [
-    MatRipple
+    MatRipple,
+    ReactiveFormsModule,
+    NgClass
   ],
   template: `
-    <form>
+    <form [formGroup]="eventFormGroup" (ngSubmit)="onSubmit()">
       <div class="form-item">
         <label for="eventName">Nombre del Evento</label>
-        <input type="text" id="eventName" class="form-item-input" placeholder="ej. Libro: El Jardin Secreto">
+        <input type="text" id="eventName" formControlName="name" class="form-item-input" placeholder="ej. Libro: El Jardin Secreto">
+        @if (eventFormGroup.controls.name.hasError('required') && eventFormGroup.controls.name.touched) {
+          <span class="text-red-600 text-sm">El nombre del evento es requerido</span>
+        }
       </div>
 
       <div class="grid grid-cols-2 gap-8">
         <div class="form-item">
           <label for="date">Fecha</label>
-          <input type="date" id="date" min="today" class="form-item-input">
+          <input type="date" formControlName="when" id="date" min="today" class="form-item-input">
+          @if (eventFormGroup.controls.when.hasError('required') && eventFormGroup.controls.when.touched) {
+            <span class="text-red-600 text-sm">La fecha es requerida</span>
+          }
         </div>
 
 
         <div class="form-item">
           <label for="time">Hora</label>
-          <input type="time" id="time" class="form-item-input">
+          <input type="time" formControlName="time" id="time" class="form-item-input">
+          @if (eventFormGroup.controls.time.hasError('required') && eventFormGroup.controls.time.touched) {
+            <span class="text-red-600 text-sm">La hora del evento es requerida</span>
+          }
         </div>
       </div>
 
       <div class="form-item">
         <label for="location">Lugar</label>
-        <input type="text" id="location" class="form-item-input">
+        <input type="text" formControlName="where" id="location" class="form-item-input">
+        @if (eventFormGroup.controls.where.hasError('required') && eventFormGroup.controls.where.touched) {
+          <span class="text-red-600 text-sm">El lugar es requerido</span>
+        }
       </div>
 
       <div class="form-item">
         <label for="map">Mapa</label>
-        <input type="url" id="map" class="form-item-input" placeholder="ulr de google maps">
+        <input type="url" id="map" formControlName="mapUrl" class="form-item-input" placeholder="ulr de google maps">
       </div>
 
       <div class="form-item">
         <label for="description">Descripcion</label>
-        <textarea class="form-item-input" id="description" cols="30" rows="4"></textarea>
+        <textarea class="form-item-input" formControlName="description" id="description" cols="30" rows="4"></textarea>
+        @if (eventFormGroup.controls.description.hasError('required') && eventFormGroup.controls.description.touched) {
+          <span class="text-red-600 text-sm">La descripcion del evento es requerida</span>
+        }
       </div>
 
-      <button type="button" class="button primary full-width flex items-center justify-center tracking-widest" mat-ripple>
+      <button type="submit"
+              class="button primary full-width flex items-center justify-center tracking-widest"
+              [disabled]="eventFormGroup.invalid"
+              [ngClass]="{ 'disabled' : eventFormGroup.invalid }"
+              mat-ripple [matRippleDisabled]="eventFormGroup.invalid">
         <span class="material-symbols-outlined">add</span>
         Crear
       </button>
@@ -51,4 +77,31 @@ import { MatRipple } from '@angular/material/core';
 })
 export class FormComponent {
 
+  private eventService: EventService = inject(EventService);
+
+  formBuilder: FormBuilder = inject(FormBuilder);
+  eventFormGroup: FormGroup<CreateEventForm> = this.createFormGroup();
+
+  public async onSubmit(): Promise<void> {
+    if(this.eventFormGroup.invalid) {
+      return;
+    }
+
+    const { name, when, time, where, description, mapUrl } = this.eventFormGroup.value;
+    const event = EventModel.create(name!, where!, when!, time!, description!, mapUrl);
+    console.log(event);
+    const dbSchema = EventModel.toDBModel(event);
+    const result = await this.eventService.createEvent(dbSchema);
+  }
+
+  private createFormGroup(): FormGroup<CreateEventForm> {
+    return this.formBuilder.group<CreateEventForm>({
+      name: this.formBuilder.nonNullable.control('', Validators.required),
+      when: this.formBuilder.nonNullable.control(new Date(), Validators.required),
+      time: this.formBuilder.nonNullable.control('', Validators.required),
+      where: this.formBuilder.nonNullable.control('', Validators.required),
+      description: this.formBuilder.nonNullable.control('', Validators.required),
+      mapUrl: this.formBuilder.control(null)
+    });
+  }
 }

@@ -1,14 +1,18 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { RoutesService } from '../routes.service';
 import { RouterLink } from '@angular/router';
 import { EventService } from './event.service';
+import { EventItemList } from './models/event-item-list';
+import { DatePipe, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-events',
   imports: [
     MatRipple,
-    RouterLink
+    RouterLink,
+    DatePipe,
+    NgStyle
   ],
   template: `
     <section class="admin-section mt-4">
@@ -37,44 +41,23 @@ import { EventService } from './event.service';
         </div>
       </div>
 
-      <div class="card">
-        <main class="content">
-          <div class="flex flex-row gap-4">
-            <div class="w-16 h-16 rounded-lg bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDQN6f7vYPoIWQRIIwtHB5aKyuOID5imHQ3h6qx3smfk474L-cX2tPEMorGTCGGZS9qCKT8BIHEnoUq-cCZKlpPn6Axz8e7EBVoaHtIMG3yG4QZzX9DBy_wE8cbXrx0DYFRXLBCcEtm3YGfmMGekZKHX_U0z2QeWrIy_UkUAFmptuxUdWOsEK_oi8rUcHCW_BnQ9QCffVa1B78HCBT6GP_BqhxsTu9xq5pQr8_Q6SM9cKjFX6I0KoxX9CZALdaRNcfp41WJqbhVRJ4");'></div>
-            <div class="flex-col">
-              <p class="font-medium">Cadaver Exquisito</p>
-              <p class="text-[var(--gray-color-text)] text-sm">Agustina Basterica</p>
-              <p class="text-[var(--gray-color-text)] text-sm">Julio 12, 2025</p>
+      @for (event of events(); track event.id) {
+        <div class="card">
+          <main class="content">
+            <div class="flex flex-row gap-4">
+              <div
+                class="w-16 h-16 rounded-lg bg-cover bg-center"
+                [ngStyle]="{ 'background-image' : defaultImage}">
+              </div>
+              <div class="flex-col">
+                <p class="font-medium">{{ event.name }}</p>
+                <p class="text-[var(--gray-color-text)] text-sm">{{ event.where }}</p>
+                <p class="text-[var(--gray-color-text)] text-sm">{{ event.when | date }}</p>
+              </div>
             </div>
-          </div>
-        </main>
-      </div>
-
-      <div class="card">
-        <main class="content">
-          <div class="flex flex-row gap-4">
-            <div class="w-16 h-16 rounded-lg bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBx3av6Vjj2wa_Dpo8oOvhGmqzT0FUec9zisMN4nlYyAysLBy9jU6tAiVo8FuBatcBwx7ZKc8LbARLIaQ0wx5N8J5qg1x0d1xP0NaYbmKNasmcHEkEoiDrhq7YHLgs16Jt-OOui2-hydlGi6qWkFYA62qVQZAXoMpmvZv2KIhPwT22k9RuG7Lch0ofIs6AKa34IRGqpe1WxZzmzUuIfgZqc8MrcdZ2SFZw-kqhEzbyNzECSJToRfR-MuZ6rIl6D-FjP6iWkGjMQfeQ");'></div>
-            <div class="flex-col">
-              <p class="font-medium">En agosto nos vemos</p>
-              <p class="text-[var(--gray-color-text)] text-sm">Agustina Basterica</p>
-              <p class="text-[var(--gray-color-text)] text-sm">Julio 12, 2025</p>
-            </div>
-          </div>
-        </main>
-      </div>
-
-      <div class="card">
-        <main class="content">
-          <div class="flex flex-row gap-4">
-            <div class="w-16 h-16 rounded-lg bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBx3av6Vjj2wa_Dpo8oOvhGmqzT0FUec9zisMN4nlYyAysLBy9jU6tAiVo8FuBatcBwx7ZKc8LbARLIaQ0wx5N8J5qg1x0d1xP0NaYbmKNasmcHEkEoiDrhq7YHLgs16Jt-OOui2-hydlGi6qWkFYA62qVQZAXoMpmvZv2KIhPwT22k9RuG7Lch0ofIs6AKa34IRGqpe1WxZzmzUuIfgZqc8MrcdZ2SFZw-kqhEzbyNzECSJToRfR-MuZ6rIl6D-FjP6iWkGjMQfeQ");'></div>
-            <div class="flex-col">
-              <p class="font-medium">En agosto nos vemos</p>
-              <p class="text-[var(--gray-color-text)] text-sm">Agustina Basterica</p>
-              <p class="text-[var(--gray-color-text)] text-sm">Julio 12, 2025</p>
-            </div>
-          </div>
-        </main>
-      </div>
+          </main>
+        </div>
+      }
     </section>
   `,
   styles: ``
@@ -83,6 +66,9 @@ export default class EventsComponent implements OnInit {
 
     private routeService: RoutesService = inject(RoutesService);
     private eventService: EventService = inject(EventService);
+
+    events = signal<EventItemList[]>([]);
+    defaultImage = 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDQN6f7vYPoIWQRIIwtHB5aKyuOID5imHQ3h6qx3smfk474L-cX2tPEMorGTCGGZS9qCKT8BIHEnoUq-cCZKlpPn6Axz8e7EBVoaHtIMG3yG4QZzX9DBy_wE8cbXrx0DYFRXLBCcEtm3YGfmMGekZKHX_U0z2QeWrIy_UkUAFmptuxUdWOsEK_oi8rUcHCW_BnQ9QCffVa1B78HCBT6GP_BqhxsTu9xq5pQr8_Q6SM9cKjFX6I0KoxX9CZALdaRNcfp41WJqbhVRJ4")';
 
     async ngOnInit(): Promise<void> {
       this.routeService.setTitle('Eventos');
@@ -93,7 +79,7 @@ export default class EventsComponent implements OnInit {
         console.error('error', events.error);
       }
       else {
-        console.log('events', events.value);
+        this.events.set(events.value);
       }
     }
 }
