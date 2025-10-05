@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Result } from 'typescript-result';
 import { EventItemList } from './models/event-item-list';
 import { createEventResponse } from './models/createEventResponse';
-import { eventEntity, eventInsert } from './types/events';
+import { eventEntity, eventInsert, eventUpdate } from './types/events';
 import { getEventByIdResult } from './models/getById';
 
 @Injectable({
@@ -21,6 +21,7 @@ export class EventService extends BaseService{
     const { data, error } = await this.supabaseClient
       .from('events')
       .select('id, name, when, where, at_time')
+      .order('when', { ascending: false });
 
     if(error) {
       return Result.error(error.message);
@@ -58,11 +59,25 @@ export class EventService extends BaseService{
     return Result.ok({ id:  data[0].id});
   }
 
-  async editEvent(event: eventEntity): Promise<Result<boolean, Error>> {
+  async editEvent(eventId: number, event: eventUpdate): Promise<Result<boolean, Error>> {
     const { data, error } = await this.supabaseClient
       .from('events')
-      .update(event)
-      .eq('id', event.id)
+      .update({...event})
+      .eq('id', eventId)
+      .select();
+
+    if (error) {
+      return Result.error(error);
+    }
+
+    return Result.ok(true);
+  }
+
+  async deleteEvent(eventId: number): Promise<Result<boolean, Error>> {
+    const { data, error } = await this.supabaseClient
+      .from('events')
+      .delete()
+      .eq('id', eventId)
       .select();
 
     if (error) {

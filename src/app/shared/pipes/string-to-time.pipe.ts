@@ -6,7 +6,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class StringToTimePipe implements PipeTransform {
 
   transform(time: string): string {
-    console.log('time', time);
     const timeParts: string[] = time.split(':');
 
     const timeName = Number(timeParts[0]) > 12 ? 'PM' : 'AM';

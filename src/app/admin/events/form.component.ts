@@ -7,7 +7,7 @@ import { EventService } from './event.service';
 import { SpinnerComponent } from '../../shared/components/spinner.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { eventEntity, eventInsert } from './types/events';
+import { eventEntity, eventInsert, eventUpdate } from './types/events';
 import { getEventByIdResult } from './models/getById';
 import { format } from 'date-fns';
 
@@ -119,8 +119,7 @@ export class FormComponent implements OnInit {
     const { name, when, time, where, description, mapUrl } = this.eventFormGroup.value;
 
     if(this.isEditMode()) {
-      const event: eventEntity = {
-        id: this.eventResolverData.id,
+      const event: eventUpdate = {
         name: name!,
         when: when!,
         at_time: time!,
@@ -129,7 +128,7 @@ export class FormComponent implements OnInit {
         map_url: mapUrl!,
         image: null
       };
-      await this.editEvent(event);
+      await this.editEvent(this.eventResolverData.id, event);
     } else {
       const dbSchema: eventInsert = {
         name: name!,
@@ -180,8 +179,8 @@ export class FormComponent implements OnInit {
     }
   }
 
-  private async editEvent(event: eventEntity) {
-    const result = await this.eventService.editEvent(event);
+  private async editEvent(eventId: number, event: eventUpdate) {
+    const result = await this.eventService.editEvent(eventId, event);
 
     if(!result.ok) {
       this.isLoading.set(false);
