@@ -5,6 +5,8 @@ import BaseService from '../../shared/services/base.service';
 import { environment } from '../../../environments/environment';
 import { CreateNotificationRequest } from './models/createNotificationRequest';
 import { Categories, Category } from './models/categories';
+import { notificationBase, notificationEntity } from './types/notification';
+import { UpdateNotificationRequest } from './models/updateNotificationRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +52,38 @@ export class NotificationService extends BaseService {
     }
 
     return Result.ok(data.id);
+  }
+
+  async updateNotification(request: UpdateNotificationRequest): Promise<Result<boolean, Error>> {
+    const { data, error } = await this.supabaseClient
+      .from('notifications')
+      .update({
+        message: request.message,
+        name: request.name,
+        type: request.type
+      })
+      .eq('id', request.id)
+      .select();
+
+    if(error) {
+      return Result.error(error);
+    }
+
+    return Result.ok(true);
+  }
+
+  async getById(id: number): Promise<Result<notificationBase, Error>> {
+    const { data, error } = await this.supabaseClient
+      .from('notifications')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      return Result.error(error);
+    }
+
+    return Result.ok(data as notificationBase);
   }
 
   getCategories(): Category[] {

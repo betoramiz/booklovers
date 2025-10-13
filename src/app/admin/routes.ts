@@ -15,7 +15,7 @@ const routes: Routes = [
       },
       {
         path: 'notifications',
-        loadComponent: () => import('./notifications/notifications.component'),
+        loadChildren: () => import('./notifications/routes'),
         resolve: { loadNotificationsResolver: loadNotificationsResolver }
       },
       {

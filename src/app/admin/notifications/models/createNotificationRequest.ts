@@ -3,3 +3,4 @@ export interface CreateNotificationRequest {
   message: string;
   type: number;
 }
+
