@@ -40,10 +40,9 @@ import { RoutesService } from './routes.service';
             <span class="material-symbols-outlined"> grade </span>
             <p class="text-xs font-medium">Reseñas</p>
           </a>
-          <a class="flex flex-col items-center justify-end gap-1 p-2 nav-link"
-             href="#">
+          <a class="flex flex-col items-center justify-end gap-1 p-2 nav-link" routerLink="/admin/settings" routerLinkActive="active" mat-ripple>
             <span class="material-symbols-outlined"> groups </span>
-            <p class="text-xs font-medium">Members</p>
+            <p class="text-xs font-medium">Configuracion</p>
           </a>
         </div>
       </nav>

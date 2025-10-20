@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../shared/guards/auth.guard';
-import { loadNotificationsResolver } from './notifications/resolvers/load-notifications.resolver';
 
 const routes: Routes = [
   { path: '', redirectTo: 'events', pathMatch: 'full' },
@@ -15,12 +14,15 @@ const routes: Routes = [
       },
       {
         path: 'notifications',
-        loadChildren: () => import('./notifications/routes'),
-        resolve: { loadNotificationsResolver: loadNotificationsResolver }
+        loadChildren: () => import('./notifications/routes')
       },
       {
         path: 'reviews',
-        loadComponent: () => import('./reviews/reviews.component')
+        loadChildren: () => import('./reviews/routes')
+      },
+      {
+        path: 'settings',
+        loadChildren: () => import('./settings/routes')
       }
     ]
   }

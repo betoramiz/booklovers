@@ -15,7 +15,10 @@
 }
 
 html, body {
+  height: 100%;
   overscroll-behavior: none !important;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 
@@ -104,6 +107,3 @@ form {
     margin-top: 12px;
   }
 }
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

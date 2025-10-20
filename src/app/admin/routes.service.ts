@@ -5,7 +5,7 @@ import { effect, Injectable, signal } from '@angular/core';
 })
 export class RoutesService {
 
-  private rootRoutes = ['/admin/events', '/admin/notifications'];
+  private rootRoutes = ['/admin/events', '/admin/notifications', '/admin/settings', '/admin/reviews'];
 
   title = signal<string>('');
   goBackRoute = signal<string>('/admin');

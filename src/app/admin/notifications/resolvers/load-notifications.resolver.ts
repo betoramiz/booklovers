@@ -8,7 +8,6 @@ export const loadNotificationsResolver: ResolveFn<NotificationItemBrief[]> = asy
 
   const month = new Date().getMonth() + 1;
   const notifications = await service.getAllMessagesForCurrentMontAndAfter(month);
-  console.log('notificaciones', notifications);
 
   if(notifications.ok) {
     return notifications.value;
