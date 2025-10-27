@@ -6,6 +6,7 @@ import { EventItemList } from './models/event-item-list';
 import { createEventResponse } from './models/createEventResponse';
 import { eventInsert, eventUpdate } from './types/events';
 import { getEventByIdResult } from './models/getById';
+import { PhotoUrl } from './models/photoUrl';
 
 @Injectable({
   providedIn: 'root'
@@ -126,7 +127,7 @@ export class EventService extends BaseService{
     return Result.ok(true);
   }
 
-  async getFiles(folder: string): Promise<Result<string[], Error>> {
+  async getFiles(folder: string): Promise<Result<PhotoUrl[], Error>> {
     const { data, error } = await this.supabaseClient
       .storage
       .from('eventos')
@@ -151,7 +152,27 @@ export class EventService extends BaseService{
       return Result.error(result.error);
     }
 
-    const signedUrls = result.data?.map(x => x.signedUrl);
+    const signedUrls = result.data?.map(photo => {
+      return {
+        signedUrl: photo.signedUrl,
+        path: photo.path?.split('/').at(-1)
+      } as PhotoUrl;
+    });
+
     return Result.ok(signedUrls!);
   }
+
+  async deleteFile(folder: string, fileName: string): Promise<Result<boolean, Error>> {
+    const { error } = await this.supabaseClient
+      .storage
+      .from('eventos')
+      .remove([`${folder}/${fileName}`]);
+
+    if(error) {
+      return Result.error(error);
+    } else {
+      return Result.ok(true);
+    }
+  }
+
 }

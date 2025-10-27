@@ -1,10 +1,18 @@
-import { Component, inject, Input, OnInit, signal, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
 import { RoutesService } from '../routes.service';
 import { EventService } from './event.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgOptimizedImage } from '@angular/common';
 import { SpinnerComponent } from '../../shared/components/spinner.component';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle
+} from '@angular/material/dialog';
+import { PhotoUrl } from './models/photoUrl';
 
 @Component({
   selector: 'app-add-photos',
@@ -12,7 +20,11 @@ import { MatGridList, MatGridTile } from '@angular/material/grid-list';
     NgOptimizedImage,
     SpinnerComponent,
     MatGridList,
-    MatGridTile
+    MatGridTile,
+    MatDialogClose,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions
   ],
   template: `
     <section class="admin-section">
@@ -26,16 +38,16 @@ import { MatGridList, MatGridTile } from '@angular/material/grid-list';
         @for (photo of photos(); track photo) {
           <mat-grid-tile>
             <div class="flex flex-col">
-              <img [ngSrc]="photo"
+              <img [ngSrc]="photo.signedUrl"
                    width="200"
                    height="200"
                    alt="Foto del evento"
                    priority />
               <div class="flex justify-between px-2">
-                <button>
+                <button (click)="delete(photo.path)">
                   <span class="material-symbols-outlined">delete</span>
                 </button>
-                <button>
+                <button (click)="openPhoto(photo.signedUrl)">
                   <span class="material-symbols-outlined">visibility</span>
                 </button>
               </div>
@@ -49,6 +61,25 @@ import { MatGridList, MatGridTile } from '@angular/material/grid-list';
     @if (loading()) {
       <club-spinner></club-spinner>
     }
+
+    <ng-template #dialogHtml>
+      <h2 mat-dialog-title class="text-xl font-black">Eliminar foto</h2>
+      <mat-dialog-content>
+        <p>Estas segura que deseas eliminar esta foto?</p>
+      </mat-dialog-content>
+      <mat-dialog-actions>
+        <div class="flex flex-row gap-2 justify-between">
+          <button mat-dialog-close class="button danger-alternative">Cancelar</button>
+          <button [mat-dialog-close]="true" class="button primary-alternative">Eliminar</button>
+        </div>
+      </mat-dialog-actions>
+    </ng-template>
+
+    <ng-template #photoDialog>
+      <div>
+        <img [ngSrc]="dialogSignedUrl()" width="500" height="500" alt="photo">
+      </div>
+    </ng-template>
   `,
   styles: ``,
   encapsulation: ViewEncapsulation.None
@@ -58,11 +89,15 @@ export default class AddPhotosComponent implements OnInit {
   private routeService: RoutesService = inject(RoutesService);
   private eventService: EventService = inject(EventService);
   private snackBarService = inject(MatSnackBar);
+  private dialog: MatDialog = inject(MatDialog);
 
-  photos = signal<string[]>([]);
+  photos = signal<PhotoUrl[]>([]);
   loading = signal<boolean>(false);
+  dialogSignedUrl = signal<string>('');
   @Input() id!: number;
   photosLimit = 5;
+  @ViewChild('dialogHtml') dialogHtml!: any;
+  @ViewChild('photoDialog') photoDialog!: any;
 
   async ngOnInit(): Promise<void> {
     this.routeService.setGoBackRoute('/admin/events');
@@ -70,7 +105,7 @@ export default class AddPhotosComponent implements OnInit {
     this.photos.set(photosUlr);
   }
 
-  async getPhotosUrl(): Promise<string[]> {
+  async getPhotosUrl(): Promise<PhotoUrl[]> {
     if(this.id === undefined || this.id === null || this.id === 0) {
       return [];
     }
@@ -81,7 +116,7 @@ export default class AddPhotosComponent implements OnInit {
 
     if(photos.ok) {
       this.loading.set(false);
-      return photos.value.filter(url => !url.includes('emptyFolderPlaceholder'));
+      return photos.value.filter(url => !url.path.includes('emptyFolderPlaceholder'));
     } else {
       this.loading.set(false);
       return [];
@@ -105,6 +140,30 @@ export default class AddPhotosComponent implements OnInit {
     } else {
       this.snackBarService.open('Error al subir la foto', 'Cerrar', { duration: 3000 });
     }
+  }
+
+  delete(fileName: string): void {
+    const dialogResult = this.dialog.open(this.dialogHtml);
+    dialogResult.afterClosed().subscribe(async result => {
+      if(result) {
+        this.loading.set(true);
+        const result = await this.eventService.deleteFile(this.id.toString(), fileName);
+        if(result.ok) {
+          const photosUlr = await this.getPhotosUrl();
+          this.photos.set(photosUlr);
+
+          this.snackBarService.open('Foto borrada correctamente', 'Cerrar', { duration: 3000 });
+        } else {
+          this.snackBarService.open('Error al borrar la foto', 'Cerrar', { duration: 3000 });
+        }
+        this.loading.set(false);
+      }
+    });
+  }
+
+  openPhoto(signedUrl: string): void {
+    this.dialogSignedUrl.set(signedUrl);
+    this.dialog.open(this.photoDialog);
   }
 
   private normalizeFileName(filename: string): string {

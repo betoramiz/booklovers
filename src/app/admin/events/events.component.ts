@@ -73,7 +73,7 @@ import { SpinnerComponent } from '../../shared/components/spinner.component';
               </div>
             </div>
           </main>
-          <footer class="bottom text-[var(--gray-color-text)] space-x-5 flex flex-row justify-end">
+          <footer class="bottom text-[var(--gray-color-text)] space-x-5 flex flex-row justify-between">
             @if (event.is_disabled) {
               <button (click)="showEvent(event.id)"  mat-ripple>
                 <span class="material-symbols-outlined">visibility</span>
