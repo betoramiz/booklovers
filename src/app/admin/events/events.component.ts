@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { RoutesService } from '../routes.service';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { EventService } from './event.service';
 import { EventItemList } from './models/event-item-list';
-import { DatePipe, NgStyle } from '@angular/common';
+import { DatePipe, NgClass, NgStyle } from '@angular/common';
 import { StringToTimePipe } from '../../shared/pipes/string-to-time.pipe';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
@@ -22,7 +22,8 @@ import { SpinnerComponent } from '../../shared/components/spinner.component';
     StringToTimePipe,
     MatDialogModule,
     MatButton,
-    SpinnerComponent
+    SpinnerComponent,
+    NgClass
   ],
   template: `
     <section class="admin-section mt-4">
@@ -58,7 +59,7 @@ import { SpinnerComponent } from '../../shared/components/spinner.component';
       }
 
       @for (event of pastEvents(); track event.id) {
-        <div class="card">
+        <div class="card" [ngClass]="{ 'bg-amber-50': event.is_disabled }">
           <main class="content">
             <div class="flex flex-row gap-4">
               <div
@@ -72,6 +73,20 @@ import { SpinnerComponent } from '../../shared/components/spinner.component';
               </div>
             </div>
           </main>
+          <footer class="bottom text-[var(--gray-color-text)] space-x-5 flex flex-row justify-end">
+            @if (event.is_disabled) {
+              <button (click)="showEvent(event.id)"  mat-ripple>
+                <span class="material-symbols-outlined">visibility</span>
+              </button>
+            } @else {
+              <button (click)="hideEvent(event.id)"  mat-ripple>
+                <span class="material-symbols-outlined">visibility_off</span>
+              </button>
+            }
+            <button [routerLink]="['add-photo', event.id]" mat-ripple>
+              <span class="material-symbols-outlined">add_a_photo</span>
+            </button>
+          </footer>
         </div>
       }
     </section>
@@ -98,7 +113,6 @@ export default class EventsComponent implements OnInit {
     private routeService: RoutesService = inject(RoutesService);
     private eventService: EventService = inject(EventService);
     private readonly dialog = inject(MatDialog);
-    private router: Router = inject(Router);
     private snackBar = inject(MatSnackBar);
 
     @ViewChild('deleteDialog') deleteDialog!: TemplateRef<any>;
@@ -111,8 +125,51 @@ export default class EventsComponent implements OnInit {
     async ngOnInit(): Promise<void> {
       this.routeService.setTitle('Eventos');
 
+      await this.getAllEvents();
+    }
+
+    async hideEvent(eventId: number): Promise<void> {
+      if(eventId === 0) {
+        return;
+      }
+
+      this.isLoading.set(true);
+      const result = await this.eventService.disableEvent(eventId);
+      if(result.error) {
+        this.snackBar.open('No se pudo ocultar el evento', 'Cerrar', { duration: 3000 });
+        this.isLoading.set(false);
+        return;
+      }
+
+      this.snackBar.open('Evento ocultado con exito', 'Cerrar', { duration: 3000 });
+      this.isLoading.set(false);
+
+      await this.getAllEvents();
+    }
+
+    async showEvent(eventId: number): Promise<void> {
+    if(eventId === 0) {
+      return;
+    }
+
+    this.isLoading.set(true);
+    const result = await this.eventService.enableEvent(eventId);
+    if(result.error) {
+      this.snackBar.open('No se pudo habilitar el evento', 'Cerrar', { duration: 3000 });
+      this.isLoading.set(false);
+      return;
+    }
+
+    this.snackBar.open('Evento habilitado con exito', 'Cerrar', { duration: 3000 });
+    this.isLoading.set(false);
+
+    await this.getAllEvents();
+  }
+
+    private async getAllEvents() {
       const allEvents = await this.eventService.getEvents();
 
+      this.isLoading.set(true);
       if(!allEvents.ok) {
         console.error('error', allEvents.error);
       }
@@ -123,25 +180,26 @@ export default class EventsComponent implements OnInit {
         this.pastEvents.set(pastEvents);
         this.futureEvents.set(futureEvents);
       }
+      this.isLoading.set(false);
     }
 
-  deleteEvent(eventId: number): void {
-      const dialog = this.dialog.open(this.deleteDialog);
-      dialog.afterClosed()
-        .pipe(
-          filter((result) => result === true),
-          tap(() => this.isLoading.set(true)),
-          switchMap(() => this.eventService.deleteEvent(eventId)),
-          tap(() => {
-            this.snackBar.open("El evento fue borrado", "Ok", { duration: 3000 });
-            this.isLoading.set(false);
-            this.futureEvents.update(events => events.filter(event => event.id !== eventId));
-          }),
-          catchError(e => {
-            this.snackBar.open("El evento no se pudo borrar", "Ok", { duration: 3000 });
-            return e;
-          })
-        )
-        .subscribe();
-  }
+    deleteEvent(eventId: number): void {
+        const dialog = this.dialog.open(this.deleteDialog);
+        dialog.afterClosed()
+          .pipe(
+            filter((result) => result === true),
+            tap(() => this.isLoading.set(true)),
+            switchMap(() => this.eventService.deleteEvent(eventId)),
+            tap(() => {
+              this.snackBar.open("El evento fue borrado", "Ok", { duration: 3000 });
+              this.isLoading.set(false);
+              this.futureEvents.update(events => events.filter(event => event.id !== eventId));
+            }),
+            catchError(e => {
+              this.snackBar.open("El evento no se pudo borrar", "Ok", { duration: 3000 });
+              return e;
+            })
+          )
+          .subscribe();
+    }
 }

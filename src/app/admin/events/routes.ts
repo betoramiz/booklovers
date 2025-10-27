@@ -18,6 +18,11 @@ const routes: Route[] = [
     loadComponent: () => import('./create-edit.component'),
     data: { editMode: true },
     resolve: { loadedEvents: loadEventResolver }
+  },
+  {
+    path: 'add-photo/:id',
+    loadComponent: () => import('./add-photos.component'),
+    // resolve: { loadedEvents: loadEventResolver }
   }
 ];
 

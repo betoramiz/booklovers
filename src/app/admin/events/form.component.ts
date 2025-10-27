@@ -7,7 +7,7 @@ import { EventService } from './event.service';
 import { SpinnerComponent } from '../../shared/components/spinner.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { eventEntity, eventInsert, eventUpdate } from './types/events';
+import { eventInsert, eventUpdate } from './types/events';
 import { getEventByIdResult } from './models/getById';
 import { format } from 'date-fns';
 
@@ -125,6 +125,7 @@ export class FormComponent implements OnInit {
         at_time: time!,
         where: where!,
         description: description!,
+        is_disabled: false,
         map_url: mapUrl!,
         image: null
       };
@@ -136,6 +137,7 @@ export class FormComponent implements OnInit {
         where: where!,
         at_time: time!,
         description: description!,
+        is_disabled: false,
         map_url: mapUrl || null,
       };
       await this.createEvent(dbSchema);

@@ -48,6 +48,7 @@ export type Database = {
           description: string
           id: number
           image: string | null
+          is_disabled: boolean
           map_url: string | null
           name: string
           when: string
@@ -59,6 +60,7 @@ export type Database = {
           description?: string
           id?: number
           image?: string | null
+          is_disabled?: boolean
           map_url?: string | null
           name: string
           when: string
@@ -70,6 +72,7 @@ export type Database = {
           description?: string
           id?: number
           image?: string | null
+          is_disabled?: boolean
           map_url?: string | null
           name?: string
           when?: string
