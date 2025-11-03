@@ -1,18 +1,33 @@
 import { Routes } from '@angular/router';
+import { eventResolver } from './resolvers/event.resolver';
 
 const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./pages.component')
+    redirectTo: 'home',
+    pathMatch: 'full'
   },
   {
-    path: 'events',
-    loadComponent: () => import('./events.component')
+    path: '',
+    loadComponent: () => import('./pages.component'),
+    children: [
+      {
+        path: 'home',
+        loadComponent: () => import('./home.component')
+      },
+      {
+        path: 'events',
+        loadComponent: () => import('./events.component'),
+        resolve: {
+          events: eventResolver
+        }
+      },
+      {
+        path: 'notifications',
+        loadComponent: () => import('./notifications.component')
+      }
+    ]
   },
-  {
-    path: 'notifications',
-    loadComponent: () => import('./notifications.component')
-  }
 ];
 
 export default routes;

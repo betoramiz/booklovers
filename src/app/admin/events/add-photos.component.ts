@@ -13,6 +13,10 @@ import {
   MatDialogTitle
 } from '@angular/material/dialog';
 import { PhotoUrl } from './models/photoUrl';
+import { Result } from 'typescript-result';
+import { UploadFileResponse } from './models/uploadFileResponse';
+import { photoInsert } from '../types/photos';
+import { Photo } from '../models/photo';
 
 @Component({
   selector: 'app-add-photos',
@@ -32,7 +36,9 @@ import { PhotoUrl } from './models/photoUrl';
       <div class="my-4">
         <button class="button primary full-width" (click)="photoEvent.click()" [disabled]="photos().length >= photosLimit">Agregar Foto</button>
         <input type="file" name="photo-event" id="photo-event" hidden="hidden"
-               accept="image/jpeg, image/png, image/gif, image/webp" #photoEvent (change)="onFileChange($event)">
+               accept="image/jpeg, image/png, image/gif, image/webp"
+               #photoEvent
+               (change)="onFileChange($event)">
       </div>
       <mat-grid-list cols="2" gutterSize="10" rowHeight="2:3">
         @for (photo of photos(); track photo) {
@@ -128,16 +134,26 @@ export default class AddPhotosComponent implements OnInit {
     if(imageInput.files === null) {
       return;
     }
+    this.loading.set(true);
     const file = imageInput.files[0];
-    const fileName = this.normalizeFileName(file.name);
-    const path =  `${this.id}/${fileName}`;
-    const result = await this.eventService.uploadFile(path, file);
-    if(result.ok) {
-      const photosUlr = await this.getPhotosUrl();
-      this.photos.set(photosUlr);
+    const result = await this.uploadFile(file);
 
-      this.snackBarService.open('Foto subida correctamente', 'Cerrar', { duration: 3000 });
+    if(result.ok) {
+      const photo = new Photo();
+      const photoInsert = photo.createEventPhoto(this.id, result.value.url);
+      const updatedPhotos = await this.eventService.addImageUrl(photoInsert);
+      if(updatedPhotos.ok) {
+        this.snackBarService.open('Foto subida correctamente', 'Cerrar', { duration: 3000 });
+        const photosUlr = await this.getPhotosUrl();
+        this.photos.set(photosUlr);
+        this.loading.set(false);
+      } else {
+        console.log('error al generar el link', updatedPhotos.error);
+        this.loading.set(false);
+        // eliminar la foto y subirla de nuevo
+      }
     } else {
+      this.loading.set(false);
       this.snackBarService.open('Error al subir la foto', 'Cerrar', { duration: 3000 });
     }
   }
@@ -185,4 +201,9 @@ export default class AddPhotosComponent implements OnInit {
     return (base + (ext ? '.' + ext : '')).toLowerCase();
   }
 
+  private async uploadFile(image: File): Promise<Result<UploadFileResponse, Error>> {
+    const fileName = this.normalizeFileName(image.name);
+    const path =  `${this.id}/${fileName}`;
+    return await this.eventService.uploadFile(path, image);
+  }
 }

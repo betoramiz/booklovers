@@ -1,160 +1,21 @@
 <div class="relative flex size-full min-h-screen flex-col justify-between group/design-root overflow-x-hidden">
-  <div class="flex-grow">
-    <div class="flex flex-col items-center p-6 bg-slate-50">
-<!--      <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-32 w-32 shadow-lg mb-4"-->
-<!--           style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBYcLO0UIB9OpBvmoSX51J30nR-NQFGrGJXqjvOgiG7Mdns86ReBfYg0IZnFFD5uRp4YTB3Hqxoj8mHoT1yXL38SbcXT-NolFVejiKCawOPTGzfv2rzCwYOsslNStD4bavSBqUVeaKrSvqNgiv1JRsGtlV30rqZg1eMauXpjIa_TmM2zbgMKUFhxPsySvhQekrnI65KLvCczAYOL0A402vAfjp6sTqwSK4KVPrZ12h7eqxX6SweSlY_KrK4llad83UNAys8YnS_Rts");'>-->
-<!--      </div>-->
-<!--      <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-32 w-32 shadow-lg mb-4"-->
-<!--           style='background-image: url("booklovers-heart.png");'>-->
-<!--      </div>-->
-      <img src="booklovers-heart.png">
-      <div class="flex flex-col items-center justify-center text-center">
-        <p class="text-2xl font-bold">Book Lover's Club</p>
-        <p class="text-base font-normal">123 miembros · Grupo Publico</p>
+    <div class="flex-grow">
+      <router-outlet></router-outlet>
+      <div class="sticky bottom-0">
+      <div class="flex justify-around border-t bg-white px-2 py-2">
+        <a class="flex flex-1 flex-col items-center justify-center gap-1 rounded-md p-2" routerLink="/home" routerLinkActive="bg-blue-50" mat-ripple>
+          <span class="material-symbols-outlined">home</span>
+          <p class="text-xs font-medium">Inicio</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-center gap-1 rounded-md p-2" routerLink="/events" routerLinkActive="bg-blue-50" mat-ripple>
+          <span class="material-symbols-outlined">event</span>
+          <p class="text-xs font-medium">Eventos</p>
+        </a>
+        <a class="flex flex-1 flex-col items-center justify-center gap-1 rounded-md p-2" routerLink="/notifications" routerLinkActive="bg-blue-50" mat-ripple>
+          <span class="material-symbols-outlined">notifications</span>
+          <p class="text-xs font-medium ">Anuncios</p>
+        </a>
       </div>
     </div>
-    <div class="p-6">
-      <h2 class="text-xl font-bold mb-3">Nuestro Club</h2>
-      <p class="text-base font-normal text-justify">
-        ¡Hola, amante de la lectura! Somos un grupo de apasionados por los libros que se reúne mensualmente.
-
-        Nos encanta platicar sobre nuestras obras favoritas, compartir puntos de vista y conectar con gente que
-        comparte esta misma pasión. Acompáñanos para disfrutar de charlas amenas y celebrar las historias que nos unen.
-      </p>
     </div>
-
-    <div class="px-6">
-      <h2 class="text-xl font-bold mb-3">
-        Como unirte al club
-      </h2>
-    </div>
-    <div class="space-y-4">
-      <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-lg">
-        <div
-          class="flex items-center justify-center size-12 bg-white rounded-full">
-          <span class="material-symbols-outlined">mail</span>
-        </div>
-        <div class="flex flex-col justify-center">
-          <p class="text-base font-medium">Subscribete al boletin</p>
-          <p class=" text-sm font-normal">Julio 15, 2024</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-lg">
-        <div
-          class="flex items-center justify-center size-12 bg-white rounded-full">
-          <span class="material-symbols-outlined">tag</span>
-        </div>
-        <div class="flex flex-col justify-center">
-          <p class="text-base font-medium">Siguenos en redes sociales</p>
-          <p class=" text-sm font-normal  ">Julio 20, 2024</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-lg">
-        <div
-          class="flex items-center justify-center size-12 bg-white rounded-full">
-          <span class="material-symbols-outlined">groups</span>
-        </div>
-        <div class="flex flex-col justify-center">
-          <p class="text-base font-medium">Asiste a las reuniones mensuales</p>
-          <p class=" text-sm font-normal">Julio 25, 2024</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="px-6 mt-8">
-      <h2 class="text-xl font-bold mb-3">
-        Reseñas de libros
-      </h2>
-    </div>
-
-<!--    <div-->
-<!--      class="flex overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden pl-6 pr-3">-->
-<!--      <div class="flex items-stretch gap-4">-->
-<!--        <div class="flex h-full flex-1 flex-col gap-2 rounded-lg min-w-40">-->
-<!--          <div class="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-lg flex flex-col"-->
-<!--               style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBeqedAbmPLMzi-Id3ACeLIzdj7TRj-1DonifmKsSPprCMCvZiL51DPHX6tPQbO6-PPDeIGeVDlDDzIXCoymdN3MTNiNh1toHb3G7DEBjfs1y99qRjXLzUP5NZ0Rj-kQWr1HZrcg2PfpzOpFTzpKxIZhZ-Tmrr7WIozOQ6X0wZUsbieWKxzIN1UZX_SA4NFNelNRIiclYIObEGdZFpQH7sqWTU9raR3DjO4JTgZyVDAY9nn_eRM3QHWZ0ZBzo9E2S87okgsWHw8ZB8");'>-->
-<!--          </div>-->
-<!--          <p class="text-base font-medium">Reunion de Julio</p>-->
-<!--        </div>-->
-<!--        <div class="flex h-full flex-1 flex-col gap-2 rounded-lg min-w-40">-->
-<!--          <div class="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-lg flex flex-col"-->
-<!--               style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD0nuqe5ojTzXUw3nBtnnxiYKBgrgLQkpvIrFbKkxJZBcNmcMsDl_CfH2VJTEqcEolo1mXXY8daQ4YPfLN_3ev7XjdYF8jyt2LBBwmXrSOUv-L6VKA5hItLz2ojYuAfxr0_PdPv_8cF4rQby2NSpg9sdNwkoSqileEUU6RXaedWO2I_gikPnIfQKMf-ZOWnVPzp981o51-a8vAXBzojObsKqdVq6kNl_angxousCwgnGWc9DLnYfcohaUFn_3Jncir2Ggw0Apslzmo");'>-->
-<!--          </div>-->
-<!--          <p class="text-base font-medium">Reunion de Junio</p>-->
-<!--        </div>-->
-<!--        <div class="flex h-full flex-1 flex-col gap-2 rounded-lg min-w-40">-->
-<!--          <div class="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-lg flex flex-col"-->
-<!--               style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD&#45;&#45;CsiF14xfBSe20UjalPBv0_gJjV2HlcHYJvpv9DmdMN8tVVBP7_J87nGyxCX7-ou-UszLRctitySo3d_kppK343-qkvtwI7-LMARhhY90tJAoMzxST4amb0HwUM-SDAAbsi5bv2lFC175TseBb-o-DMI7ZxeWFx08jENBkyyBrgDRoefX47x261ZPWh20GmoDq303qPrVsPj7rctiBqUZxfpu_wLgKMzx4QRBO_gJB03-AiezjkLEdFYTJl1doAgkdzOoWXy0dU");'>-->
-<!--          </div>-->
-<!--          <p class="text-base font-medium">Reunion de Mayo</p>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="p-6">-->
-<!--      <h2 class="text-xl font-bold leading-tight tracking-tight mb-4">-->
-<!--        Anuncios-->
-<!--      </h2>-->
-<!--      <div class="space-y-4">-->
-<!--        <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-lg">-->
-<!--          <div-->
-<!--            class="flex items-center justify-center size-12 bg-white rounded-full">-->
-<!--            <span class="material-symbols-outlined">auto_stories</span>-->
-<!--          </div>-->
-<!--          <div class="flex flex-col justify-center">-->
-<!--            <p class="text-base font-medium">Libro del Mes</p>-->
-<!--            <p class=" text-sm font-normal">Julio-->
-<!--              15, 2024</p>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-lg">-->
-<!--          <div-->
-<!--            class="flex items-center justify-center size-12 bg-white rounded-full">-->
-<!--            <span class="material-symbols-outlined">groups</span>-->
-<!--          </div>-->
-<!--          <div class="flex flex-col justify-center">-->
-<!--            <p class="text-base font-medium">Proxima reunion</p>-->
-<!--            <p class=" text-sm font-normal  ">Julio 20, 2024</p>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-lg">-->
-<!--          <div-->
-<!--            class="flex items-center justify-center size-12 bg-white rounded-full">-->
-<!--            <span class="material-symbols-outlined">cake</span>-->
-<!--          </div>-->
-<!--          <div class="flex flex-col justify-center">-->
-<!--            <p class="text-base font-medium">Cumpleaños</p>-->
-<!--            <p class=" text-sm font-normal">Julio 25, 2024</p>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-lg">-->
-<!--          <div-->
-<!--            class="flex items-center justify-center size-12 bg-white rounded-full">-->
-<!--            <span class="material-symbols-outlined">rate_review</span>-->
-<!--          </div>-->
-<!--          <div class="flex flex-col justify-center">-->
-<!--            <p class="text-base font-medium">Reseñas</p>-->
-<!--            <p class=" text-sm font-normal">Julio 30, 2024</p>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-
-  <div class="sticky bottom-0">
-    <div class="flex justify-around border-t bg-white px-2 py-2">
-      <a class="flex flex-1 flex-col items-center justify-center gap-1 rounded-md p-2 bg-blue-50" href="#">
-        <span class="material-symbols-outlined">home</span>
-        <p class="text-xs font-medium">Inicio</p>
-      </a>
-      <a class="flex flex-1 flex-col items-center justify-center gap-1 rounded-md p-2 hover:bg-gray-50" routerLink="/events">
-        <span class="material-symbols-outlined">event</span>
-        <p class="text-xs font-medium">Eventos</p>
-      </a>
-      <a class="flex flex-1 flex-col items-center justify-center gap-1 rounded-md p-2 hover:bg-gray-50" routerLink="/notifications">
-        <span class="material-symbols-outlined">notifications</span>
-        <p class="text-xs font-medium ">Anuncios</p>
-      </a>
-    </div>
-  </div>
-</div>
 </div>

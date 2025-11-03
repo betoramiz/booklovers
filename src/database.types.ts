@@ -104,6 +104,30 @@ export type Database = {
         }
         Relationships: []
       }
+      photos: {
+        Row: {
+          "book _id": number | null
+          created_at: string
+          event_id: number | null
+          id: number
+          url: string
+        }
+        Insert: {
+          "book _id"?: number | null
+          created_at?: string
+          event_id?: number | null
+          id?: number
+          url: string
+        }
+        Update: {
+          "book _id"?: number | null
+          created_at?: string
+          event_id?: number | null
+          id?: number
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

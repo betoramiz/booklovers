@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { MatRipple } from '@angular/material/core';
 
 @Component({
   selector: 'app-pages',
   imports: [
-    RouterLink
+    RouterLink,
+    RouterOutlet,
+    RouterLinkActive,
+    MatRipple
   ],
   templateUrl: './pages.component.html',
   styleUrl: './pages.component.css'

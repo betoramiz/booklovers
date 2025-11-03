@@ -138,7 +138,7 @@ export class FormComponent implements OnInit {
         at_time: time!,
         description: description!,
         is_disabled: false,
-        map_url: mapUrl || null,
+        map_url: mapUrl || null
       };
       await this.createEvent(dbSchema);
     }

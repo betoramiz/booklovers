@@ -7,6 +7,8 @@ import { createEventResponse } from './models/createEventResponse';
 import { eventInsert, eventUpdate } from './types/events';
 import { getEventByIdResult } from './models/getById';
 import { PhotoUrl } from './models/photoUrl';
+import { UploadFileResponse } from './models/uploadFileResponse';
+import { photoInsert } from '../types/photos';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +37,7 @@ export class EventService extends BaseService{
   async getEventById(eventId: number): Promise<Result<getEventByIdResult, Error>> {
     const { data, error } = await this.supabaseClient
       .from('events')
-      .select('id, name, when, where, at_time, description, is_disabled, map_url')
+      .select('id, name, when, where, at_time, description, is_disabled, map_url, public_url')
       .eq('id', eventId)
       .single();
 
@@ -101,6 +103,19 @@ export class EventService extends BaseService{
     return Result.ok(true);
   }
 
+  async addImageUrl(photo: photoInsert): Promise<Result<boolean, Error>> {
+    const { data, error } = await this.supabaseClient
+      .from('photos')
+      .insert([photo])
+      .select();
+
+    if(error) {
+      return Result.error(error);
+    }
+
+    return Result.ok(true);
+  }
+
   async enableEvent(eventId: number): Promise<Result<boolean, Error>> {
     const { error } = await this.supabaseClient
       .from('events')
@@ -114,8 +129,8 @@ export class EventService extends BaseService{
     return Result.ok(true);
   }
 
-  async uploadFile(filename: string, file: File): Promise<Result<boolean, Error>> {
-    const { error } = await this.supabaseClient
+  async uploadFile(filename: string, file: File): Promise<Result<UploadFileResponse, Error>> {
+    const { data, error } = await this.supabaseClient
       .storage
       .from('eventos')
       .upload(filename, file);
@@ -124,7 +139,14 @@ export class EventService extends BaseService{
       return Result.error(error);
     }
 
-    return Result.ok(true);
+    const urlResult = this.supabaseClient.storage.from('eventos').getPublicUrl(filename);
+
+    const result: UploadFileResponse = {
+      fileId: data?.id,
+      url: urlResult.data.publicUrl
+    }
+
+    return Result.ok(result);
   }
 
   async getFiles(folder: string): Promise<Result<PhotoUrl[], Error>> {
